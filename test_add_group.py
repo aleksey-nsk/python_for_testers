@@ -1,78 +1,71 @@
 # -*- coding: utf-8 -*-
+
+import unittest
+
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import Select
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import NoAlertPresentException
-import unittest, time, re
 
 
+# Пока будем использовать unittest - входит в стандартную библиотеку Python
+# В unittest требуется чтобы тестовый класс являлся наследником специального класса - unittest.TestCase
 class GroupCreationTests(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Firefox()
-        self.driver.implicitly_wait(30)
-        self.base_url = "https://www.google.com/"
-        self.verificationErrors = []
-        self.accept_next_alert = True
-
-    def test_group_creation_tests(self):
-        driver = self.driver
-        driver.get("http://localhost/addressbook/group.php")
-        driver.find_element_by_name("user").click()
-        driver.find_element_by_name("user").clear()
-        driver.find_element_by_name("user").send_keys("admin")
-        driver.find_element_by_id("LoginForm").click()
-        driver.find_element_by_name("pass").click()
-        driver.find_element_by_name("pass").clear()
-        driver.find_element_by_name("pass").send_keys("secret")
-        driver.find_element_by_xpath("//input[@value='Login']").click()
-        driver.find_element_by_id("container").click()
-        driver.find_element_by_link_text("groups").click()
-        driver.find_element_by_name("new").click()
-        driver.find_element_by_name("group_name").click()
-        driver.find_element_by_name("group_name").clear()
-        driver.find_element_by_name("group_name").send_keys("test1")
-        driver.find_element_by_name("group_header").click()
-        driver.find_element_by_name("group_header").clear()
-        driver.find_element_by_name("group_header").send_keys("test2")
-        driver.find_element_by_name("group_footer").click()
-        driver.find_element_by_name("group_footer").clear()
-        driver.find_element_by_name("group_footer").send_keys("test3")
-        driver.find_element_by_name("submit").click()
-        driver.find_element_by_link_text("group page").click()
-        driver.find_element_by_link_text("Logout").click()
-
-    def is_element_present(self, how, what):
-        try:
-            self.driver.find_element(by=how, value=what)
-        except NoSuchElementException as e:
-            return False
-        return True
-
-    def is_alert_present(self):
-        try:
-            self.driver.switch_to_alert()
-        except NoAlertPresentException as e:
-            return False
-        return True
-
-    def close_alert_and_get_its_text(self):
-        try:
-            alert = self.driver.switch_to_alert()
-            alert_text = alert.text
-            if self.accept_next_alert:
-                alert.accept()
-            else:
-                alert.dismiss()
-            return alert_text
-        finally:
-            self.accept_next_alert = True
+        print("\n***** setUp *****")
+        self.wd = webdriver.Firefox()
+        self.wd.implicitly_wait(30)
 
     def tearDown(self):
-        self.driver.quit()
-        self.assertEqual([], self.verificationErrors)
+        print("***** tearDown *****")
+        self.wd.quit()
+
+    def open_home_page(self, wd):
+        print("  вспомогательная функция open_home_page()")
+        wd.get("http://localhost/addressbook/")
+
+    def login(self, wd):
+        print("  вспомогательная функция login()")
+        wd.find_element_by_name("user").send_keys("admin")
+        wd.find_element_by_name("pass").send_keys("secret")
+        wd.find_element_by_xpath("//input[@value='Login']").click()
+
+    def open_groups_page(self, wd):
+        print("  вспомогательная функция open_groups_page()")
+        wd.find_element_by_link_text("groups").click()
+
+    def create_group(self, wd):
+        print("  вспомогательная функция create_group()")
+        # Init group creation:
+        wd.find_element_by_name("new").click()
+        # Fill group form:
+        wd.find_element_by_name("group_name").send_keys("Name 1")
+        wd.find_element_by_name("group_header").send_keys("Header 1")
+        wd.find_element_by_name("group_footer").send_keys("Footer 1")
+        # Submit group creation:
+        wd.find_element_by_name("submit").click()
+
+    def return_to_groups_page(self, wd):
+        print("  вспомогательная функция return_to_groups_page()")
+        wd.find_element_by_link_text("group page").click()
+
+    def logout(self, wd):
+        print("  вспомогательная функция logout()")
+        wd.find_element_by_link_text("Logout").click()
+
+    def test_group_creation(self):
+        print("Test group creation")
+        wd = self.wd
+        self.open_home_page(wd)
+        self.login(wd)
+        self.open_groups_page(wd)
+        self.create_group(wd)
+        self.return_to_groups_page(wd)
+        self.logout(wd)
 
 
+# Подсказка для Python как именно этот скрипт должен запускаться, в том случае если мы
+# не указываем явно, что он должен быть запущен при помощи утилиты py.test (py.test test_add_group.py),
+# а просто пишем (python test_add_group.py)
+#
+# Python посмотрит на эти строчки, увидит что нужно запустить unittest (unittest.main()),
+# и запустит его. Далее unittest найдёт тестовый класс, тестовый метод, и выполнит их:
 if __name__ == "__main__":
     unittest.main()
