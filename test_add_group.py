@@ -4,17 +4,19 @@ import unittest
 
 from selenium import webdriver
 
+from group import Group
+
 
 # Пока будем использовать unittest - входит в стандартную библиотеку Python
 # В unittest требуется чтобы тестовый класс являлся наследником специального класса - unittest.TestCase
 class GroupCreationTests(unittest.TestCase):
     def setUp(self):
-        print("\n***** setUp *****")
+        print("\n\n********** setUp **********")
         self.wd = webdriver.Firefox()
         self.wd.implicitly_wait(30)
 
     def tearDown(self):
-        print("***** tearDown *****")
+        print("********** tearDown **********\n")
         self.wd.quit()
 
     def open_home_page(self, wd):
@@ -23,7 +25,8 @@ class GroupCreationTests(unittest.TestCase):
 
     def login(self, wd, username, password):
         print("  вспомогательная функция login()")
-        print("    аргументы: username=" + username + ", password=" + password)
+        print("    username: " + username)
+        print("    password: " + password)
         wd.find_element_by_name("user").send_keys(username)
         wd.find_element_by_name("pass").send_keys(password)
         wd.find_element_by_xpath("//input[@value='Login']").click()
@@ -32,15 +35,15 @@ class GroupCreationTests(unittest.TestCase):
         print("  вспомогательная функция open_groups_page()")
         wd.find_element_by_link_text("groups").click()
 
-    def create_group(self, wd, name, header, footer):
+    def create_group(self, wd, group):
         print("  вспомогательная функция create_group()")
-        print("    аргументы: name='" + name + "', header='" + header + "', footer='" + footer + "'")
+        print("    group: " + str(group))
         # Init group creation:
         wd.find_element_by_name("new").click()
         # Fill group form:
-        wd.find_element_by_name("group_name").send_keys(name)
-        wd.find_element_by_name("group_header").send_keys(header)
-        wd.find_element_by_name("group_footer").send_keys(footer)
+        wd.find_element_by_name("group_name").send_keys(group.name)
+        wd.find_element_by_name("group_header").send_keys(group.header)
+        wd.find_element_by_name("group_footer").send_keys(group.footer)
         # Submit group creation:
         wd.find_element_by_name("submit").click()
 
@@ -58,7 +61,7 @@ class GroupCreationTests(unittest.TestCase):
         self.open_home_page(wd)
         self.login(wd, username="admin", password="secret")
         self.open_groups_page(wd)
-        self.create_group(wd, name="Name 1", header="Header 1", footer="Footer 1")
+        self.create_group(wd, Group(name="Name 1", header="Header 1", footer="Footer 1"))
         self.return_to_groups_page(wd)
         self.logout(wd)
 
@@ -68,7 +71,7 @@ class GroupCreationTests(unittest.TestCase):
         self.open_home_page(wd)
         self.login(wd, username="admin", password="secret")
         self.open_groups_page(wd)
-        self.create_group(wd, name="", header="", footer="")
+        self.create_group(wd, Group(name="", header="", footer=""))
         self.return_to_groups_page(wd)
         self.logout(wd)
 
