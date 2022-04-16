@@ -21,24 +21,26 @@ class GroupCreationTests(unittest.TestCase):
         print("  вспомогательная функция open_home_page()")
         wd.get("http://localhost/addressbook/")
 
-    def login(self, wd):
+    def login(self, wd, username, password):
         print("  вспомогательная функция login()")
-        wd.find_element_by_name("user").send_keys("admin")
-        wd.find_element_by_name("pass").send_keys("secret")
+        print("    аргументы: username=" + username + ", password=" + password)
+        wd.find_element_by_name("user").send_keys(username)
+        wd.find_element_by_name("pass").send_keys(password)
         wd.find_element_by_xpath("//input[@value='Login']").click()
 
     def open_groups_page(self, wd):
         print("  вспомогательная функция open_groups_page()")
         wd.find_element_by_link_text("groups").click()
 
-    def create_group(self, wd):
+    def create_group(self, wd, name, header, footer):
         print("  вспомогательная функция create_group()")
+        print("    аргументы: name='" + name + "', header='" + header + "', footer='" + footer + "'")
         # Init group creation:
         wd.find_element_by_name("new").click()
         # Fill group form:
-        wd.find_element_by_name("group_name").send_keys("Name 1")
-        wd.find_element_by_name("group_header").send_keys("Header 1")
-        wd.find_element_by_name("group_footer").send_keys("Footer 1")
+        wd.find_element_by_name("group_name").send_keys(name)
+        wd.find_element_by_name("group_header").send_keys(header)
+        wd.find_element_by_name("group_footer").send_keys(footer)
         # Submit group creation:
         wd.find_element_by_name("submit").click()
 
@@ -50,13 +52,23 @@ class GroupCreationTests(unittest.TestCase):
         print("  вспомогательная функция logout()")
         wd.find_element_by_link_text("Logout").click()
 
-    def test_group_creation(self):
-        print("Test group creation")
+    def test_add_group(self):
+        print("Test add group")
         wd = self.wd
         self.open_home_page(wd)
-        self.login(wd)
+        self.login(wd, username="admin", password="secret")
         self.open_groups_page(wd)
-        self.create_group(wd)
+        self.create_group(wd, name="Name 1", header="Header 1", footer="Footer 1")
+        self.return_to_groups_page(wd)
+        self.logout(wd)
+
+    def test_add_empty_group(self):
+        print("Test add empty group")
+        wd = self.wd
+        self.open_home_page(wd)
+        self.login(wd, username="admin", password="secret")
+        self.open_groups_page(wd)
+        self.create_group(wd, name="", header="", footer="")
         self.return_to_groups_page(wd)
         self.logout(wd)
 
