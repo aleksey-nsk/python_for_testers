@@ -19,27 +19,31 @@ class GroupCreationTests(unittest.TestCase):
         print("********** tearDown **********\n")
         self.wd.quit()
 
-    def open_home_page(self, wd):
+    def open_home_page(self):
         print("  вспомогательная функция open_home_page()")
+        wd = self.wd
         wd.get("http://localhost/addressbook/")
 
-    def login(self, wd, username, password):
+    def login(self, username, password):
         print("  вспомогательная функция login()")
         print("    username: " + username)
         print("    password: " + password)
-        self.open_home_page(wd)
+        wd = self.wd
+        self.open_home_page()
         wd.find_element_by_name("user").send_keys(username)
         wd.find_element_by_name("pass").send_keys(password)
         wd.find_element_by_xpath("//input[@value='Login']").click()
 
-    def open_groups_page(self, wd):
+    def open_groups_page(self):
         print("  вспомогательная функция open_groups_page()")
+        wd = self.wd
         wd.find_element_by_link_text("groups").click()
 
-    def create_group(self, wd, group):
+    def create_group(self, group):
         print("  вспомогательная функция create_group()")
         print("    group: " + str(group))
-        self.open_groups_page(wd)
+        wd = self.wd
+        self.open_groups_page()
         # Init group creation:
         wd.find_element_by_name("new").click()
         # Fill group form:
@@ -48,29 +52,29 @@ class GroupCreationTests(unittest.TestCase):
         wd.find_element_by_name("group_footer").send_keys(group.footer)
         # Submit group creation:
         wd.find_element_by_name("submit").click()
-        self.return_to_groups_page(wd)
+        self.return_to_groups_page()
 
-    def return_to_groups_page(self, wd):
+    def return_to_groups_page(self):
         print("  вспомогательная функция return_to_groups_page()")
+        wd = self.wd
         wd.find_element_by_link_text("group page").click()
 
-    def logout(self, wd):
+    def logout(self):
         print("  вспомогательная функция logout()")
+        wd = self.wd
         wd.find_element_by_link_text("Logout").click()
 
     def test_add_group(self):
         print("Test add group")
-        wd = self.wd
-        self.login(wd, username="admin", password="secret")
-        self.create_group(wd, Group(name="Name 1", header="Header 1", footer="Footer 1"))
-        self.logout(wd)
+        self.login(username="admin", password="secret")
+        self.create_group(Group(name="Name 1", header="Header 1", footer="Footer 1"))
+        self.logout()
 
     def test_add_empty_group(self):
         print("Test add empty group")
-        wd = self.wd
-        self.login(wd, username="admin", password="secret")
-        self.create_group(wd, Group(name="", header="", footer=""))
-        self.logout(wd)
+        self.login(username="admin", password="secret")
+        self.create_group(Group(name="", header="", footer=""))
+        self.logout()
 
 
 # Подсказка для Python как именно этот скрипт должен запускаться, в том случае если мы
