@@ -12,7 +12,7 @@ class Application:
 
     # Вспомогательный метод для разрушения фикстуры. Здесь останавливаем браузер:
     def destroy(self):
-        print("Вспомогательный метод destroy()")
+        print("Вспомогательный метод destroy(). Разрушаем фикстуру")
         self.wd.quit()
 
     def open_home_page(self):

@@ -1,40 +1,29 @@
 # -*- coding: utf-8 -*-
 
-import unittest
+import pytest
 
 from application import Application
 from group import Group
 
 
-class GroupCreationTests(unittest.TestCase):
-    # Данный метод будет инициализировать фикстуру:
-    def setUp(self):
-        print("\n\n******************* setUp ********************")
-        self.app = Application()
-
-    # Метод завершения:
-    def tearDown(self):
-        print("\n\n****************** tearDown ******************")
-        self.app.destroy()
-
-    def test_add_group(self):
-        print("\n\n*************** Test add group ***************")
-        self.app.login(username="admin", password="secret")
-        self.app.create_group(Group(name="Name 1", header="Header 1", footer="Footer 1"))
-        self.app.logout()
-
-    def test_add_empty_group(self):
-        print("\n\n************ Test add empty group ************")
-        self.app.login(username="admin", password="secret")
-        self.app.create_group(Group(name="", header="", footer=""))
-        self.app.logout()
+@pytest.fixture  # чтобы pytest догадался, что это не просто функция, а функция создающая фикстуру
+def app(request):
+    print("\n\n*********** Инициализатор фикстуры ***********")
+    fixture = Application()  # создать фикстуру
+    request.addfinalizer(fixture.destroy)  # pytest сам вызовет в нужный момент для разрушения фикстуры
+    return fixture  # вернуть фикстуру
 
 
-# Подсказка для Python как именно этот скрипт должен запускаться, в том случае если мы
-# не указываем явно, что он должен быть запущен при помощи утилиты py.test (py.test test_add_group.py),
-# а просто пишем (python test_add_group.py)
-#
-# Python посмотрит на эти строчки, увидит что нужно запустить unittest (unittest.main()),
-# и запустит его. Далее unittest найдёт тестовый класс, тестовый метод, и выполнит их:
-if __name__ == "__main__":
-    unittest.main()
+# Тестовые функции в качестве параметра будут принимать фикстуру, т.е. объект созданный функцией app()
+def test_add_group(app):
+    print("\n\n*************** Test add group ***************")
+    app.login(username="admin", password="secret")
+    app.create_group(Group(name="Name 1", header="Header 1", footer="Footer 1"))
+    app.logout()
+
+
+def test_add_empty_group(app):
+    print("\n\n************ Test add empty group ************")
+    app.login(username="admin", password="secret")
+    app.create_group(Group(name="", header="", footer=""))
+    app.logout()
