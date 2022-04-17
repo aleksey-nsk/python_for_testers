@@ -5,7 +5,7 @@ import pytest
 from fixture.application import Application
 
 
-@pytest.fixture  # чтобы pytest догадался, что это не просто функция, а функция создающая фикстуру
+@pytest.fixture(scope="session")  # чтобы pytest догадался, что это не просто функция, а функция создающая фикстуру
 def app(request):
     print("\n\n*********** Инициализатор фикстуры ***********")
     fixture = Application()  # создать фикстуру

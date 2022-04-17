@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import time
+
+
 class SessionHelper:
     def __init__(self, app):
         self.app = app
@@ -17,4 +20,6 @@ class SessionHelper:
     def logout(self):
         print("Вспомогательный метод logout()")
         wd = self.app.wd
+        time.sleep(1)  # пауза 1 секунда
         wd.find_element_by_link_text("Logout").click()
+        time.sleep(1)  # пауза 1 секунда

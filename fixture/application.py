@@ -12,7 +12,7 @@ class Application:
     def __init__(self):
         print("Конструктор класса Application")
         self.wd = webdriver.Firefox()
-        self.wd.implicitly_wait(30)
+        self.wd.implicitly_wait(10)
         # Инициализируем помощников:
         self.session = SessionHelper(self)  # SessionHelper получает ссылку на объект класса Application
         self.group = GroupHelper(self)
