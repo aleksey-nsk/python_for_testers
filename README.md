@@ -77,3 +77,5 @@
 
 - примеры тут:  
 ![](https://github.com/cont-azhdanov/python_for_testers/blob/master/screenshots/01_package_with_rest_api_tests.png)  
+
+Проверка эндпоинтов: **Enrich**, **StandardGeographyQuery**, **DataLayers**, **Countries**.
