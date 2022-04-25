@@ -3,7 +3,8 @@
 from model.group import Group
 
 
-# Тестовые функции в качестве параметра будут принимать фикстуру, т.е. объект созданный функцией app()
+# Тестовые функции в качестве параметра будут принимать фикстуру,
+# т.е. объект созданный функцией app()
 def test_add_group(app):
     print("\n\n*************** Test add group ***************")
     app.session.login(username="admin", password="secret")
