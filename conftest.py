@@ -14,12 +14,11 @@ def app():
 
     if fixture is None:
         fixture = Application()  # создать фикстуру
-        fixture.session.login(username="admin", password="secret")
     else:
         if not fixture.is_valid():
             fixture = Application()
-            fixture.session.login(username="admin", password="secret")
 
+    fixture.session.ensure_login(username="admin", password="secret")
     return fixture  # вернуть фикстуру
 
 
@@ -32,7 +31,7 @@ def stop(request):
 
     def fin():
         print("\n\nВспомогательный метод fin(). Вызывается при разрушении фикстуры !!!")
-        fixture.session.logout()
+        fixture.session.ensure_logout()
         fixture.stop_browser()
 
     request.addfinalizer(fin)  # pytest сам вызовет в нужный момент метод addfinalizer() для разрушения фикстуры

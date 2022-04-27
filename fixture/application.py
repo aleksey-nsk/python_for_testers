@@ -12,14 +12,14 @@ class Application:
     def __init__(self):
         print("Конструктор класса Application")
         self.wd = webdriver.Firefox()
-        self.wd.implicitly_wait(10)
+        self.wd.implicitly_wait(5)  # неявное ожидание 5 секунд
         # Инициализируем помощников:
         self.session = SessionHelper(self)  # SessionHelper получает ссылку на объект класса Application
         self.group = GroupHelper(self)
         self.navigation = NavigationHelper(self)
 
     def stop_browser(self):
-        print("  вспомогательный метод stop_browser(). Останавливаем браузер")
+        print("Вспомогательный метод stop_browser(). Останавливаем браузер")
         self.wd.quit()
 
     def is_valid(self):
