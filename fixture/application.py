@@ -18,7 +18,16 @@ class Application:
         self.group = GroupHelper(self)
         self.navigation = NavigationHelper(self)
 
-    # Вспомогательный метод для разрушения фикстуры. Здесь останавливаем браузер:
-    def destroy(self):
-        print("\nВспомогательный метод destroy(). Разрушаем фикстуру !!!")
+    def stop_browser(self):
+        print("  вспомогательный метод stop_browser(). Останавливаем браузер")
         self.wd.quit()
+
+    def is_valid(self):
+        print("Вспомогательный метод is_valid()")
+        try:
+            self.wd.current_url
+            print("  фикстура валидна")
+            return True
+        except:
+            print("  фикстура не валидна")
+            return False

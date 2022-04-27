@@ -18,7 +18,7 @@ class SessionHelper:
         wd.find_element_by_xpath("//input[@value='Login']").click()
 
     def logout(self):
-        print("Вспомогательный метод logout()")
+        print("  вспомогательный метод logout()")
         wd = self.app.wd
         time.sleep(1)  # пауза 1 секунда
         wd.find_element_by_link_text("Logout").click()
