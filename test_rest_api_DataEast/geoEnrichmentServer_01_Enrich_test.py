@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import pytest
 import requests
 
 from test_rest_api_DataEast.get_token import get_arcgis_token
 
 
+@pytest.mark.skip(reason="временно")
 def test_get_enrich():
     print("\n\n************** Test get enrich ***************")
 
@@ -55,6 +57,7 @@ def test_get_enrich():
                .get("features")[0].get("attributes").get("TOTPOP") == tot_pop
 
 
+@pytest.mark.skip(reason="временно")
 def test_post_enrich():
     print("\n\n************** Test post enrich **************")
 
@@ -105,6 +108,7 @@ def test_post_enrich():
                .get("features")[0].get("attributes").get("TOTPOP") == tot_pop
 
 
+@pytest.mark.skip(reason="временно")
 def test_post_enrich_fail():
     print("\n\n*********** Test post enrich fail ************")
     print("Required parameter 'studyAreas' is missed")

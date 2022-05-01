@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import pytest
 import requests
 
 from test_rest_api_DataEast.get_token import get_arcgis_token
 
 
+@pytest.mark.skip(reason="временно")
 def test_geography_levels_us():
     print("\n\n********** Test geography levels US **********")
 

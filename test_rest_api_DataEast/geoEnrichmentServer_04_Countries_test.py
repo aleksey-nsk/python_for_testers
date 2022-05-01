@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import pytest
 import requests
 
 from test_rest_api_DataEast.get_token import get_arcgis_token
 
 
+@pytest.mark.skip(reason="временно")
 def test_geoenrichment_countries():
     print("\n\n******** Test: GeoEnrichment Countries *******")
 
