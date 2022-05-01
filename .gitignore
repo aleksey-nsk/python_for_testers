@@ -133,3 +133,6 @@ dmypy.json
 *.iws
 *.iml
 *.ipr
+
+# Arcgis token
+/token

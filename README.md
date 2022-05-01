@@ -73,11 +73,23 @@
  
 - Интеллектуальная фикстура. Тут обработка исключения `try-except`
 
-### ============= Примеры автотестов на REST API =============
-- пакет `test_rest_api_DataEast` (**этот пакет временно убрал из проекта !!!!!**)
+### Примеры автотестов на REST API
+- пакет `test_rest_api_DataEast`
+
 - тестовый фреймворк **pytest**
+
 - библиотека для HTTP-запросов **requests 2.23.0**
+
 - примеры тут:  
 ![](https://github.com/cont-azhdanov/python_for_testers/blob/master/screenshots/01_package_with_rest_api_tests.png)  
 Проверка эндпоинтов: **Enrich**, **StandardGeographyQuery**, **DataLayers**, **Countries**.
-### ============= Примеры автотестов на REST API !!! Конец !!! =======
+
+- Для запросов на GeoEnrichmentServer необходимо сформировать **API key** в личном кабинете
+на сайте **ArcGIS Developer**:  
+![](https://github.com/cont-azhdanov/python_for_testers/blob/master/screenshots/02_arcgis_key.png)  
+
+Далее в корне проекта создать директрию `token`, а внутри неё файл `congif.ini`:  
+![](https://github.com/cont-azhdanov/python_for_testers/blob/master/screenshots/03_token_dir.png)  
+
+В файле `congif.ini` создать раздел `[Settings]` и в нём параметр `token`. Вставить сюда свой **API key**:  
+![](https://github.com/cont-azhdanov/python_for_testers/blob/master/screenshots/04_config_file.png)  
