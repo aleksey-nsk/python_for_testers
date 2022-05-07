@@ -63,3 +63,11 @@ class GroupHelper:
         self.fill_group_form(new_group_data)
         wd.find_element_by_name("update").click()  # submit modification
         self.return_to_groups_page()
+
+    def count(self):
+        print("Вспомогательный метод count()")
+        self.open_groups_page()
+        wd = self.app.wd
+        group_count = len(wd.find_elements_by_name("selected[]"))
+        print("  количество групп в адресной книге: " + str(group_count))
+        return group_count
