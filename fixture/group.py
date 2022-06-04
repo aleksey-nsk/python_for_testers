@@ -5,9 +5,13 @@ class GroupHelper:
         self.app = app
 
     def open_groups_page(self):
-        print("Вспомогательный метод open_groups_page()")
         wd = self.app.wd
-        wd.find_element_by_link_text("groups").click()
+        print("Вспомогательный метод open_groups_page()")
+        print("  current_url:", wd.current_url)
+        # Если условие не выполняется, тогда сделать клик по ссылке:
+        if not (wd.current_url.endswith('/group.php') and len(wd.find_elements_by_name('new')) > 0):
+            print("  сделать клик по ссылке")
+            wd.find_element_by_link_text("groups").click()
 
     def change_field_value(self, field_name, text):
         print("Вспомогательный метод change_field_value()")
