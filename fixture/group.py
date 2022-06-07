@@ -52,23 +52,36 @@ class GroupHelper:
         wd.find_element_by_link_text("group page").click()
 
     def select_first_group(self):
-        print("Вспомогательный метод select_first_group()")
+        print('Вспомогательный метод select_first_group()')
+        self.select_group_by_index(0)
+
+    def select_group_by_index(self, index):
+        print('Вспомогательный метод select_group_by_index()')
+        print('  index:', index)
         wd = self.app.wd
-        wd.find_element_by_name("selected[]").click()  # select first group
+        wd.find_elements_by_name("selected[]")[index].click()
 
     def delete_first(self):
-        print("Вспомогательный метод delete_first()")
+        print('Вспомогательный метод delete_first()')
+        self.delete_group_by_index(0)
+
+    def delete_group_by_index(self, index):
+        print('Вспомогательный метод delete_group_by_index()')
         self.open_groups_page()
+        self.select_group_by_index(index)
         wd = self.app.wd
-        self.select_first_group()
-        wd.find_element_by_name("delete").click()  # submit deletion
+        wd.find_element_by_name('delete').click()  # submit deletion
         self.return_to_groups_page()
         self.group_cache = None
 
     def modify_first(self, new_group_data):
-        print("Вспомогательный метод modify_first()")
+        print('Вспомогательный метод modify_first()')
+        self.modify_group_by_index(0, new_group_data)
+
+    def modify_group_by_index(self, index, new_group_data):
+        print('Вспомогательный метод modify_group_by_index()')
         self.open_groups_page()
-        self.select_first_group()
+        self.select_group_by_index(index)
         wd = self.app.wd
         wd.find_element_by_name("edit").click()  # open modification form
         self.fill_group_form(new_group_data)
