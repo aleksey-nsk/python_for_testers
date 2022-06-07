@@ -13,7 +13,7 @@ class SessionHelper:
         self.app.navigation.open_home_page()
         wd.find_element_by_name("user").send_keys(username)
         wd.find_element_by_name("pass").send_keys(password)
-        wd.find_element_by_xpath("//input[@value='Login']").click()
+        wd.find_element_by_xpath('//input[@value="Login"]').click()
 
     def logout(self):
         print("  вспомогательный метод logout()")
@@ -29,12 +29,15 @@ class SessionHelper:
         return boolean
 
     def is_logged_in_as(self, username):
-        print("  вспомогательный метод is_logged_in_as(), username: " + username)
+        print('  вспомогательный метод is_logged_in_as(), username: ' + username)
+        return self.get_logged_user() == username
+
+    def get_logged_user(self):
+        print('  вспомогательный метод get_logged_user()')
         wd = self.app.wd
-        actual_text = wd.find_element_by_xpath("//div[@id='container']/div[@id='top']/form/b").text
-        expected_text = "(" + username + ")"
-        print("  actual_text: " + actual_text + ", expected_text: " + expected_text)
-        return actual_text == expected_text
+        actual_user = wd.find_element_by_xpath("//div[@id='container']/div[@id='top']/form/b").text[1:-1]
+        print('  actual_user: ' + actual_user)
+        return actual_user
 
     def ensure_login(self, username, password):
         print("Вспомогательный метод ensure_login()")
