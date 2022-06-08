@@ -2,6 +2,7 @@
 
 from selenium import webdriver
 
+from fixture.contact import ContactHelper
 from fixture.group import GroupHelper
 from fixture.navigation import NavigationHelper
 from fixture.session import SessionHelper
@@ -17,6 +18,7 @@ class Application:
         self.session = SessionHelper(self)  # SessionHelper получает ссылку на объект класса Application
         self.group = GroupHelper(self)
         self.navigation = NavigationHelper(self)
+        self.contact = ContactHelper(self)
 
     def stop_browser(self):
         print("Вспомогательный метод stop_browser(). Останавливаем браузер")

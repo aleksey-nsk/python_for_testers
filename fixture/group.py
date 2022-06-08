@@ -103,8 +103,8 @@ class GroupHelper:
         if self.group_cache is None:
             print('  кэш пустой')
             self.open_groups_page()
-            wd = self.app.wd
             self.group_cache = []
+            wd = self.app.wd
             for element in wd.find_elements_by_css_selector('span.group'):
                 text = element.text
                 id = element.find_element_by_name('selected[]').get_attribute('value')
