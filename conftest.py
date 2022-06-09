@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import os
 
 import pytest
 
@@ -21,8 +22,11 @@ def app(request):
     browser = request.config.getoption('--browser')
 
     if target is None:
-        with open(request.config.getoption('--target')) as config_file:
-            target = json.load(config_file)
+        abs_path = os.path.abspath(__file__)  # абсолютный путь к текущему файлу
+        dir_name = os.path.dirname(abs_path)  # директория, в которой лежит текущий файл
+        config_file = os.path.join(dir_name, request.config.getoption('--target'))  # абсолютный путь к конфигу
+        with open(config_file) as f:
+            target = json.load(f)
 
     if fixture is None or not fixture.is_valid():
         fixture = Application(browser=browser, base_url=target['baseUrl'])  # создать фикстуру
