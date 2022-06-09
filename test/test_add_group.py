@@ -1,21 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import pytest
-
-# from data.add_group import testdata
-from data.add_group import constant as testdata
 from model.group import Group
 
 
 # Тестовые функции в качестве параметра будут принимать фикстуру,
 # т.е. объект созданный функцией app()
-#
-# С помощью @pytest.mark.parametrize()
-# добавляем тестовые данные
-
-@pytest.mark.parametrize('group', testdata, ids=[repr(x) for x in testdata])
-def test_add_group(app, group):
+def test_add_group(app, data_groups):
     print("\n\n*************** Test add group ***************")
+    group = data_groups
 
     old_groups = app.group.get_group_list()
     app.group.create(group)
