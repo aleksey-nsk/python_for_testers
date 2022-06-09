@@ -1,26 +1,33 @@
 # -*- coding: utf-8 -*-
 
+import json
+
 import pytest
 
 from fixture.application import Application
 
+target = None
 fixture = None
 
 
 @pytest.fixture  # чтобы pytest догадался, что это не просто функция, а функция создающая фикстуру
 def app(request):
     print("\n\n**************** Фикстура app ****************")
-    global fixture  # будем использовать данную глобальную переменную
+
+    # Будем использовать данные глобальные переменные
+    global target
+    global fixture
+
     browser = request.config.getoption('--browser')
-    base_url = request.config.getoption('--baseUrl')
 
-    if fixture is None:
-        fixture = Application(browser, base_url)  # создать фикстуру
-    else:
-        if not fixture.is_valid():
-            fixture = Application(browser, base_url)
+    if target is None:
+        with open(request.config.getoption('--target')) as config_file:
+            target = json.load(config_file)
 
-    fixture.session.ensure_login(username="admin", password="secret")
+    if fixture is None or not fixture.is_valid():
+        fixture = Application(browser=browser, base_url=target['baseUrl'])  # создать фикстуру
+
+    fixture.session.ensure_login(username=target['username'], password=target['password'])
     return fixture  # вернуть фикстуру
 
 
@@ -42,4 +49,4 @@ def stop(request):
 
 def pytest_addoption(parser):
     parser.addoption('--browser', action='store', default='firefox')
-    parser.addoption('--baseUrl', action='store', default='http://localhost/addressbook/')
+    parser.addoption('--target', action='store', default='target.json')
