@@ -1,23 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import random
-import string
-
 import pytest
 
+# from data.add_group import testdata
+from data.add_group import constant as testdata
 from model.group import Group
-
-
-def random_string(prefix, maxlen):
-    symbols = string.ascii_letters + string.digits
-    random_str = prefix + ''.join([random.choice(symbols) for i in range(random.randrange(maxlen))])
-    return random_str
-
-
-testdata = [Group(name="", header="", footer="")] + [
-    Group(name=random_string('name_', 10), header=random_string('header_', 5), footer=random_string('footer_', 5))
-    for i in range(3)
-]
 
 
 # Тестовые функции в качестве параметра будут принимать фикстуру,
