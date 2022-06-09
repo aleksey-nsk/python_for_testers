@@ -10,14 +10,21 @@ from fixture.session import SessionHelper
 
 class Application:
     # В конструкторе инициализация. Здесь запускаем браузер:
-    def __init__(self):
+    def __init__(self, browser, base_url):
         print("Конструктор класса Application")
-        self.wd = webdriver.Firefox()
+
+        if browser == 'firefox':
+            self.wd = webdriver.Firefox()
+        elif browser == 'chrome':
+            self.wd = webdriver.Chrome()
+        else:
+            raise ValueError('Unrecognized browser %s' % browser)
+
         self.wd.implicitly_wait(5)  # неявное ожидание 5 секунд
         # Инициализируем помощников:
         self.session = SessionHelper(self)  # SessionHelper получает ссылку на объект класса Application
         self.group = GroupHelper(self)
-        self.navigation = NavigationHelper(self)
+        self.navigation = NavigationHelper(self, base_url)
         self.contact = ContactHelper(self)
 
     def stop_browser(self):

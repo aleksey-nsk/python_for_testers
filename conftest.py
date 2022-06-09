@@ -8,15 +8,17 @@ fixture = None
 
 
 @pytest.fixture  # чтобы pytest догадался, что это не просто функция, а функция создающая фикстуру
-def app():
+def app(request):
     print("\n\n**************** Фикстура app ****************")
     global fixture  # будем использовать данную глобальную переменную
+    browser = request.config.getoption('--browser')
+    base_url = request.config.getoption('--baseUrl')
 
     if fixture is None:
-        fixture = Application()  # создать фикстуру
+        fixture = Application(browser, base_url)  # создать фикстуру
     else:
         if not fixture.is_valid():
-            fixture = Application()
+            fixture = Application(browser, base_url)
 
     fixture.session.ensure_login(username="admin", password="secret")
     return fixture  # вернуть фикстуру
@@ -36,3 +38,8 @@ def stop(request):
 
     request.addfinalizer(fin)  # pytest сам вызовет в нужный момент метод addfinalizer() для разрушения фикстуры
     return fixture  # вернуть фикстуру
+
+
+def pytest_addoption(parser):
+    parser.addoption('--browser', action='store', default='firefox')
+    parser.addoption('--baseUrl', action='store', default='http://localhost/addressbook/')
