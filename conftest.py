@@ -8,33 +8,51 @@ import jsonpickle
 import pytest
 
 from fixture.application import Application
+from fixture.db import DbFixture
 
 target = None
 fixture = None
 
 
-@pytest.fixture  # чтобы pytest догадался, что это не просто функция, а функция создающая фикстуру
-def app(request):
-    print("\n\n**************** Фикстура app ****************")
-
-    # Будем использовать данные глобальные переменные
+def load_config(file):
     global target
-    global fixture
-
-    browser = request.config.getoption('--browser')
 
     if target is None:
-        abs_path = os.path.abspath(__file__)  # абсолютный путь к текущему файлу
-        dir_name = os.path.dirname(abs_path)  # директория, в которой лежит текущий файл
-        config_file = os.path.join(dir_name, request.config.getoption('--target'))  # абсолютный путь к конфигу
+        abs_path = os.path.abspath(__file__)
+        dir_name = os.path.dirname(abs_path)
+        config_file = os.path.join(dir_name, file)
         with open(config_file) as f:
             target = json.load(f)
 
-    if fixture is None or not fixture.is_valid():
-        fixture = Application(browser=browser, base_url=target['baseUrl'])  # создать фикстуру
+    return target
 
-    fixture.session.ensure_login(username=target['username'], password=target['password'])
+
+@pytest.fixture  # чтобы pytest догадался, что это не просто функция, а функция создающая фикстуру
+def app(request):
+    print("\n\n**************** Фикстура app ****************")
+    global fixture  # будем использовать данную глобальную переменную
+    browser = request.config.getoption('--browser')
+    web_config = load_config(request.config.getoption('--target'))['web']
+
+    if fixture is None or not fixture.is_valid():
+        fixture = Application(browser=browser, base_url=web_config['baseUrl'])  # создать фикстуру
+
+    fixture.session.ensure_login(username=web_config['username'], password=web_config['password'])
     return fixture  # вернуть фикстуру
+
+
+@pytest.fixture(scope='session')
+def db(request):
+    print("\n\n***************** Фикстура db ****************")
+    db_config = load_config(request.config.getoption('--target'))['db']
+    dbfixture = DbFixture(host=db_config['host'], name=db_config['name'],
+                          user=db_config['user'], password=db_config['password'])
+
+    def fin():
+        dbfixture.destroy()
+
+    request.addfinalizer(fin)
+    return dbfixture
 
 
 # Для финализации делаем отдельную фикстуру:
