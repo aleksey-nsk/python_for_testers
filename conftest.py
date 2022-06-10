@@ -55,6 +55,14 @@ def db(request):
     return dbfixture
 
 
+@pytest.fixture
+def check_ui(request):
+    print("\n\n************** Фикстура check_ui *************")
+    check = request.config.getoption('--check_ui')
+    print("check:", check)
+    return check
+
+
 # Для финализации делаем отдельную фикстуру:
 #   scope="session" => значит фикстура будет создаваться одна на всю сессию (на весь сеанс запуска тестов).
 #   autouse=True => фикстура сработает автоматически, даже не смотря на то, что она ни в каком тесте явно не указана.
@@ -74,6 +82,7 @@ def stop(request):
 def pytest_addoption(parser):
     parser.addoption('--browser', action='store', default='firefox')
     parser.addoption('--target', action='store', default='target.json')
+    parser.addoption('--check_ui', action='store_true')
 
 
 def pytest_generate_tests(metafunc):

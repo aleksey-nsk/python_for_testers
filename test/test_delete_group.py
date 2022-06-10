@@ -3,7 +3,7 @@ import random
 from model.group import Group
 
 
-def test_delete_some_group(app, db):
+def test_delete_some_group(app, db, check_ui):
     print("\n\n*********** Test delete some group **********")
 
     # Обеспечение выполнения предусловий
@@ -18,3 +18,6 @@ def test_delete_some_group(app, db):
     new_groups = db.get_group_list()
     old_groups.remove(group)
     assert new_groups == old_groups
+
+    if check_ui:
+        assert sorted(new_groups, key=Group.id_or_max) == sorted(app.group.get_group_list(), key=Group.id_or_max)
