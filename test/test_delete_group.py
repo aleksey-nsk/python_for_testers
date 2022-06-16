@@ -1,10 +1,14 @@
+import logging.config
 import random
 
 from model.group import Group
 
+logging.config.fileConfig('../log.conf')
+log = logging.getLogger('simple')
+
 
 def test_delete_some_group(app, db, check_ui):
-    print("\n\n*********** Test delete some group **********")
+    log.debug("*********** Test delete some group **********")
 
     # Обеспечение выполнения предусловий
     if len(db.get_group_list()) == 0:

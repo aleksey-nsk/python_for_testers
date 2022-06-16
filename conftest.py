@@ -2,6 +2,7 @@
 
 import importlib
 import json
+import logging.config
 import os
 
 import jsonpickle
@@ -9,6 +10,9 @@ import pytest
 
 from fixture.application import Application
 from fixture.db import DbFixture
+
+logging.config.fileConfig('../log.conf')
+log = logging.getLogger('simple')
 
 target = None
 fixture = None
@@ -29,7 +33,7 @@ def load_config(file):
 
 @pytest.fixture  # чтобы pytest догадался, что это не просто функция, а функция создающая фикстуру
 def app(request):
-    print("\n\n**************** Фикстура app ****************")
+    log.debug("**************** Фикстура app ****************")
     global fixture  # будем использовать данную глобальную переменную
     browser = request.config.getoption('--browser')
     web_config = load_config(request.config.getoption('--target'))['web']
@@ -43,7 +47,7 @@ def app(request):
 
 @pytest.fixture(scope='session')
 def db(request):
-    print("\n\n***************** Фикстура db ****************")
+    log.debug("***************** Фикстура db ****************")
     db_config = load_config(request.config.getoption('--target'))['db']
     dbfixture = DbFixture(host=db_config['host'], name=db_config['name'],
                           user=db_config['user'], password=db_config['password'])
@@ -57,9 +61,9 @@ def db(request):
 
 @pytest.fixture
 def check_ui(request):
-    print("\n\n************** Фикстура check_ui *************")
+    log.debug("************** Фикстура check_ui *************")
     check = request.config.getoption('--check_ui')
-    print("check:", check)
+    log.debug("check: " + str(check))
     return check
 
 
@@ -68,12 +72,13 @@ def check_ui(request):
 #   autouse=True => фикстура сработает автоматически, даже не смотря на то, что она ни в каком тесте явно не указана.
 @pytest.fixture(scope="session", autouse=True)
 def stop(request):
-    print("\n\n**************** Фикстура stop ***************")
+    log.debug("**************** Фикстура stop ***************")
 
     def fin():
-        print("\n\nВспомогательный метод fin(). Вызывается при разрушении фикстуры !!!")
-        fixture.session.ensure_logout()
-        fixture.stop_browser()
+        log.debug("Вспомогательный метод fin(). Вызывается при разрушении фикстуры !!!")
+        if fixture is not None:
+            fixture.session.ensure_logout()
+            fixture.stop_browser()
 
     request.addfinalizer(fin)  # pytest сам вызовет в нужный момент метод addfinalizer() для разрушения фикстуры
     return fixture  # вернуть фикстуру

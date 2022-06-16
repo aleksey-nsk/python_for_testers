@@ -1,6 +1,11 @@
+import logging.config
+
 import mysql.connector
 
 from model.group import Group
+
+logging.config.fileConfig('../log.conf')
+log = logging.getLogger('simple')
 
 
 class DbFixture:
@@ -16,7 +21,7 @@ class DbFixture:
         self.connection.close()
 
     def get_group_list(self):
-        print('Загрузка списка групп из БД')
+        log.debug('Загрузка списка групп из БД')
         list = []
         cursor = self.connection.cursor()
 

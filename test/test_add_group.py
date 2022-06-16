@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 
+import logging.config
+
 from model.group import Group
+
+logging.config.fileConfig('../log.conf')
+log = logging.getLogger('simple')
 
 
 def test_add_group(app, db, json_groups):
-    print("\n\n*************** Test add group ***************")
+    log.debug("*************** Test add group ***************")
     group = json_groups
 
     old_groups = db.get_group_list()
